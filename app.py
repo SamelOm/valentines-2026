@@ -334,7 +334,7 @@ with col2:
 if st.session_state.opened:
     st.markdown("""
     <div class="letter pixel">
-      <h2 style="margin:0; color:#7a0056;">Dear you,</h2>
+      <h2 style="margin:0; color:#7a0056;">Dear pigi,</h2>
       <p style="font-size:1.18rem; line-height:1.6; margin-top:10px; color:#4b0035; font-weight:900;">
         Even when the map says “far,” you still feel like my closest place.
         <br><br>
