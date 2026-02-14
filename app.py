@@ -1,5 +1,4 @@
 import streamlit as st
-import datetime as dt
 import random
 import base64
 import io
@@ -63,37 +62,38 @@ OPEN_WAV  = _tone_wav_bytes(660, 0.10, 0.22)
 CHIME_WAV = _chime_wav_bytes()
 
 # -----------------------------
-# Pixel scene SVG: girl + guy + cat + huge heart
+# Pixel scene SVG: girl + guy + cat + huge heart (HUGE SCALE)
 # -----------------------------
-def pixel_scene_svg(scale=14):
-    # Simple “pixel” drawing using rectangles. You can tweak colors/positions easily.
-    # Canvas units are pixels; we scale via CSS to keep it crisp.
-    W, H = 64, 38
+def pixel_scene_svg(scale=26):
+    W, H = 64, 40
 
     def r(x, y, w=1, h=1, c="#000"):
         return f"<rect x='{x}' y='{y}' width='{w}' height='{h}' fill='{c}'/>"
 
-    pink = "#ff2da8"
+    pink   = "#ff2da8"
     yellow = "#ffd84d"
-    berry = "#7a0056"
-    cream = "#fff7a8"
-    skin1 = "#f6c7a8"
-    skin2 = "#eab08f"
-    hair1 = "#3b1d2b"
-    hair2 = "#1f0f18"
+    berry  = "#7a0056"
+    cream  = "#fff7a8"
+
+    skin1  = "#f6c7a8"
+    skin2  = "#eab08f"
+    hair1  = "#3b1d2b"
+    hair2  = "#1f0f18"
+
     shirt1 = "#ff58b6"
     shirt2 = "#ffd84d"
-    pants = "#7a0056"
-    cat = "#ffb3d9"
+    pants  = "#7a0056"
+
+    cat_white = "#ffffff"
+    cat_spot  = "#b57a4a"
 
     px = []
 
-    # Background sparkles
-    for (x,y) in [(6,5),(10,8),(52,7),(56,10),(46,4),(18,6)]:
+    # sparkles
+    for (x, y) in [(6,6),(10,10),(52,8),(56,12),(46,5),(18,7)]:
         px += [r(x,y,1,1,yellow), r(x+1,y,1,1,cream)]
 
-    # Huge heart (center-top)
-    # Heart shape in pixels
+    # HUGE heart (top center)
     heart_pixels = [
         (30,6),(31,6),(34,6),(35,6),
         (29,7),(30,7),(31,7),(32,7),(33,7),(34,7),(35,7),(36,7),
@@ -103,7 +103,6 @@ def pixel_scene_svg(scale=14):
         (32,11),(33,11),
         (32,12),(33,12)
     ]
-    # Shadow + body + highlight
     for x,y in heart_pixels:
         px.append(r(x+1,y+1,1,1,berry))
     for x,y in heart_pixels:
@@ -111,51 +110,43 @@ def pixel_scene_svg(scale=14):
     for x,y in [(31,7),(32,7),(31,8)]:
         px.append(r(x,y,1,1,yellow))
 
-    # Ground strip
-    px.append(r(0, 34, 64, 4, "#ffe6f3"))
-    px.append(r(0, 33, 64, 1, "#ff9fd6"))
+    # ground
+    px.append(r(0, 35, 64, 5, "#ffe6f3"))
+    px.append(r(0, 34, 64, 1, "#ff9fd6"))
 
-    # Girl (left)
-    # hair
-    for (x,y,w,h,c) in [
-        (12,18,8,1,hair2),(11,19,10,2,hair1),(12,21,8,1,hair1)
-    ]:
-        px.append(r(x,y,w,h,c))
-    # face
+    # Girl (left) – bigger blocks already, just scaled huge
+    px += [r(12,18,8,1,hair2), r(11,19,10,2,hair1), r(12,21,8,1,hair1)]
     px += [r(13,20,6,3,skin1), r(13,23,6,1,skin2)]
-    # eyes
     px += [r(15,21,1,1,berry), r(17,21,1,1,berry)]
-    # body (shirt)
     px += [r(12,24,8,5,shirt1), r(13,25,6,1,yellow)]
-    # legs
-    px += [r(13,29,3,4,pants), r(17,29,3,4,pants)]
-    # shoes
-    px += [r(13,33,3,1,berry), r(17,33,3,1,berry)]
+    px += [r(13,29,3,5,pants), r(17,29,3,5,pants)]
+    px += [r(13,34,3,1,berry), r(17,34,3,1,berry)]
 
     # Guy (right)
-    # hair
     px += [r(44,18,8,1,hair2), r(43,19,10,2,hair1), r(44,21,8,1,hair1)]
-    # face
     px += [r(45,20,6,3,skin1), r(45,23,6,1,skin2)]
-    # eyes
     px += [r(47,21,1,1,berry), r(49,21,1,1,berry)]
-    # body (shirt)
     px += [r(44,24,8,5,shirt2), r(45,25,6,1,pink)]
-    # legs
-    px += [r(45,29,3,4,pants), r(49,29,3,4,pants)]
-    # shoes
-    px += [r(45,33,3,1,berry), r(49,33,3,1,berry)]
+    px += [r(45,29,3,5,pants), r(49,29,3,5,pants)]
+    px += [r(45,34,3,1,berry), r(49,34,3,1,berry)]
 
-    # Cat (middle, sitting between them)
+    # Cat (middle) – WHITE with BROWN SPOTS
     px += [
-        r(30,26,5,4,cat),           # body
-        r(31,24,3,2,cat),           # head
-        r(31,24,1,1,berry),         # ear tip
-        r(33,24,1,1,berry),
-        r(32,25,1,1,berry),         # nose/face dot
-        r(28,28,2,1,cat),           # tail start
-        r(27,27,1,2,cat),           # tail curl
-        r(30,30,5,1,berry)          # tiny shadow
+        r(29,27,7,4,cat_white),   # body
+        r(31,25,3,2,cat_white),   # head
+        r(31,25,1,1,berry),       # ear tips
+        r(33,25,1,1,berry),
+        r(32,26,1,1,berry),       # nose/face dot
+        r(27,29,2,1,cat_white),   # tail start
+        r(26,28,1,2,cat_white),   # tail curl
+        r(29,31,7,1,berry)        # shadow
+    ]
+    # brown spots
+    px += [
+        r(30,28,1,1,cat_spot),
+        r(33,28,1,1,cat_spot),
+        r(31,29,1,1,cat_spot),
+        r(34,29,1,1,cat_spot),
     ]
 
     svg = f"""
@@ -169,12 +160,12 @@ def pixel_scene_svg(scale=14):
     return f"""
     <div style="display:flex; justify-content:center; margin: 6px 0 10px 0;">
       <img src="data:image/svg+xml;base64,{b64}"
-           style="width:{W*scale}px; height:{H*scale}px; image-rendering: pixelated; border:0;" />
+           style="width:{W*scale}px; height:{H*scale}px; image-rendering: pixelated;" />
     </div>
     """
 
 # -----------------------------
-# CSS (pink/yellow pixel UI)
+# CSS (removed that inner dotted border)
 # -----------------------------
 st.markdown("""
 <style>
@@ -186,7 +177,7 @@ st.markdown("""
   background-size: 24px 24px, 24px 24px, auto;
 }
 header, footer{visibility:hidden;}
-.block-container{padding-top: 1.1rem; padding-bottom: 2rem; max-width: 1120px;}
+.block-container{padding-top: 0.8rem; padding-bottom: 2rem; max-width: 1400px;}
 
 .pixel{
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -196,7 +187,7 @@ header, footer{visibility:hidden;}
 .title{
   text-align:center;
   font-weight: 950;
-  font-size: 3.2rem;
+  font-size: 3.4rem;
   line-height: 1.05;
   color: #7a0056;
   text-shadow: 4px 4px 0 #ffd84d, 8px 8px 0 rgba(0,0,0,0.10);
@@ -206,34 +197,25 @@ header, footer{visibility:hidden;}
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height: 82vh;
+  min-height: 88vh;
 }
 
 .card{
-  width: min(900px, 95vw);
+  width: min(1300px, 98vw);
   background: #ffe6f3;
-  border: 8px solid #ff58b6;
+  border: 10px solid #ff58b6;
   border-radius: 0px;
-  box-shadow: 12px 12px 0 #ffd84d;
-  padding: 22px 22px;
-  position: relative;
-}
-
-.card:before{
-  content:"";
-  position:absolute;
-  inset:10px;
-  border: 4px dotted #ffd84d;
-  pointer-events:none;
+  box-shadow: 16px 16px 0 #ffd84d;
+  padding: 18px 18px;
 }
 
 .envelope{
-  width: 300px;
-  height: 190px;
-  margin: 6px auto 18px auto;
+  width: 320px;
+  height: 200px;
+  margin: 0 auto 18px auto;
   background: #fff2fb;
-  border: 8px solid #ff58b6;
-  box-shadow: 10px 10px 0 #ffd84d;
+  border: 10px solid #ff58b6;
+  box-shadow: 12px 12px 0 #ffd84d;
   position: relative;
 }
 .envelope:before{
@@ -245,33 +227,33 @@ header, footer{visibility:hidden;}
     linear-gradient(225deg, transparent 50%, #ffd84d 50%) right;
   background-size: 50% 100%;
   background-repeat: no-repeat;
-  opacity: 0.28;
+  opacity: 0.25;
 }
 .seal{
   position:absolute;
-  width: 56px; height: 56px;
+  width: 64px; height: 64px;
   background:#ff58b6;
-  border: 6px solid #7a0056;
+  border: 8px solid #7a0056;
   left: 50%; top: 54%;
   transform: translate(-50%,-50%);
-  box-shadow: 6px 6px 0 #ffd84d;
+  box-shadow: 8px 8px 0 #ffd84d;
 }
 
 .letter{
   background: #fff7a8;
-  border: 8px solid #7a0056;
-  box-shadow: 12px 12px 0 #ff58b6;
+  border: 10px solid #7a0056;
+  box-shadow: 16px 16px 0 #ff58b6;
   padding: 18px 18px;
 }
 
 div.stButton > button{
   background:#ff58b6;
   color:#fff;
-  border: 6px solid #7a0056;
+  border: 8px solid #7a0056;
   border-radius: 0px;
-  padding: 12px 16px;
+  padding: 14px 18px;
   font-weight: 950;
-  box-shadow: 8px 8px 0 #ffd84d;
+  box-shadow: 10px 10px 0 #ffd84d;
 }
 div.stButton > button:hover{ background:#ff2da8; }
 
@@ -314,11 +296,11 @@ if "play" not in st.session_state:
     st.session_state.play = None  # "click" | "open" | "chime"
 
 # -----------------------------
-# HEADER (only title now)
+# TITLE ONLY
 # -----------------------------
 st.markdown("<div class='pixel title'>VALENTINE LETTER 💖</div>", unsafe_allow_html=True)
 
-# Autoplay sounds when triggered
+# sound triggers
 if st.session_state.play == "click":
     autoplay_wav(CLICK_WAV); st.session_state.play = None
 elif st.session_state.play == "open":
@@ -327,12 +309,12 @@ elif st.session_state.play == "chime":
     autoplay_wav(CHIME_WAV); st.session_state.play = None
 
 # -----------------------------
-# CENTER STAGE
+# CENTER
 # -----------------------------
 st.markdown("<div class='stage'><div class='card pixel'>", unsafe_allow_html=True)
 
-# BIG HEART + pixel scene (girl + guy + cat)
-st.markdown(pixel_scene_svg(scale=14), unsafe_allow_html=True)
+# HUGE pixel art
+st.markdown(pixel_scene_svg(scale=26), unsafe_allow_html=True)
 
 # Envelope
 st.markdown("""
@@ -353,10 +335,8 @@ if st.session_state.opened:
     st.markdown("""
     <div class="letter pixel">
       <h2 style="margin:0; color:#7a0056;">Dear you,</h2>
-      <p style="font-size:1.12rem; line-height:1.58; margin-top:10px; color:#4b0035; font-weight:900;">
+      <p style="font-size:1.18rem; line-height:1.6; margin-top:10px; color:#4b0035; font-weight:900;">
         Even when the map says “far,” you still feel like my closest place.
-        <br><br>
-        I love how you show up for me — the kind that calms me down and lights me up at the same time.
         <br><br>
         I’m proud of you. I miss you. I choose you.
       </p>
@@ -368,9 +348,6 @@ if st.session_state.opened:
     """, unsafe_allow_html=True)
 
     st.write("")
-    st.markdown("### 💖 unlock (3 taps)")
-    st.caption("each tap makes a sound.")
-
     a, b, c = st.columns(3)
     with a:
         if st.button("💛"):
@@ -393,7 +370,7 @@ if st.session_state.opened:
         st.success("unlocked ✅")
         st.markdown("""
         <div class="letter pixel" style="background:#ffe6f3;">
-          <p style="font-size:1.18rem; margin:0; color:#7a0056; font-weight:980;">
+          <p style="font-size:1.2rem; margin:0; color:#7a0056; font-weight:980;">
             Final line: The distance is hard — but not having you would be harder.
           </p>
         </div>
