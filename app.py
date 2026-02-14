@@ -364,7 +364,7 @@ with center:
 if st.session_state.opened:
     st.markdown("""
     <div class="letter pixel">
-      <h2 style="margin:0; color:#7a0056;">Dear you,</h2>
+      <h2 style="margin:0; color:#7a0056;">Dear PIGI,</h2>
       <p style="font-size:1.18rem; line-height:1.6; margin-top:10px; color:#4b0035; font-weight:900;">
         Even when the map says “far,” you still feel like my closest place.
         <br><br>
@@ -373,7 +373,7 @@ if st.session_state.opened:
       <p style="margin-top:14px; color:#7a0056; font-weight:950;">
         Happy Valentine’s Day 💛💗
       </p>
-      <p style="margin:0; color:#7a0056; font-weight:950;">— me</p>
+      <p style="margin:0; color:#7a0056; font-weight:950;">— momo</p>
     </div>
     """, unsafe_allow_html=True)
 
